@@ -33,12 +33,10 @@ The `CustomAppBar` is a modern replacement for Flutter's default `AppBar`, with 
 
 ### Installation
 
-1.  **Add the dependency** to your `pubspec.yaml` file:
-
-    ```yaml
-    dependencies:
-      custom_appbar: ^0.1.0
-    ```
+## pubspec.yaml
+```yaml
+custom_appbar: <lastest version>
+```
 
 2.  **Run `flutter pub get`** in your terminal.
 
@@ -46,8 +44,12 @@ The `CustomAppBar` is a modern replacement for Flutter's default `AppBar`, with 
 
 * Flutter SDK: `>=3.0.0`
 * Dart SDK: `>=2.18.0`
-
 ---
+
+## Import
+```dart
+import 'package:custom_appbar/custom_appbar.dart';
+```
 
 ## Usage 💻
 
