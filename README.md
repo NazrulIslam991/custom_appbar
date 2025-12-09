@@ -139,22 +139,35 @@ CustomAppBar(
 
 
 Properties Reference
-| Property                    | Type                   | Default       | Description                         |
-| --------------------------- | ---------------------- | ------------- | ----------------------------------- |
-| `title`                     | `String`               | `"App Title"` | Title when search is closed.        |
-| `hintText`                  | `String?`              | `"Search..."` | Placeholder for search field.       |
-| `onChanged`                 | `Function(String)?`    | `null`        | Fires on every search text change.  |
-| `onSearch`                  | `Function(String)?`    | `null`        | Fires on search submit/enter.       |
-| `notificationCount`         | `int`                  | `0`           | Shows a red notification badge.     |
-| `profileAvatar`             | `Widget?`              | `null`        | A custom avatar/profile widget.     |
-| `backgroundColor`           | `Color?`               | `null`        | AppBar background color.            |
-| `leadingIconColor`          | `Color?`               | `auto`        | Auto-calculated from theme.         |
-| `actionIconColor`           | `Color?`               | `auto`        | Auto-calculated from theme.         |
-| `titleStyle`                | `TextStyle?`           | `null`        | Custom title style.                 |
-| `bottom`                    | `PreferredSizeWidget?` | `null`        | Widget below AppBar (e.g., TabBar). |
-| `bottomShape`               | `ShapeBorder?`         | `null`        | Custom shape for bottom corners.    |
-| `keepSearchOpenAfterSubmit` | `bool`                 | `false`       | Keeps search active after submit.   |
-| `toolbarHeight`             | `double`               | `56.0`        | Custom height.                      |
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| title | String | "App Title" | The title text displayed when search is closed. |
+| leadingIcon | IconData | Icons.menu | The icon displayed at the leading position. |
+| onChanged | ValueChanged<String>? | null | Callback triggered whenever the search text changes (for live filtering). |
+| onSearch | ValueChanged<String>? | null | Callback triggered when the user submits the search (e.g., presses Enter). |
+| onLeadingPressed | VoidCallback? | null | Callback invoked when the leading icon is pressed. |
+| toolbarHeight | double | kToolbarHeight | Height of the AppBar toolbar. |
+| titleAlignment | Alignment | Alignment.centerLeft | Alignment of the title widget. |
+| bottomShape | ShapeBorder? | null | Shape applied to the bottom of the AppBar. |
+| bottom | PreferredSizeWidget? | null | Widget displayed below the AppBar (e.g., TabBar). |
+| backgroundColor | Color? | Theme-aware | Background color of the AppBar. |
+| leadingIconColor | Color? | Theme-aware | Color of the leading icon. |
+| actionIconColor | Color? | Theme-aware | Color of action icons (search, profile, notifications). |
+| textColor | Color? | Theme-aware | Default text color for title and search text. |
+| titleStyle | TextStyle? | null | TextStyle applied to the title. |
+| searchTextStyle | TextStyle? | null | TextStyle applied to the search TextField. |
+| hintTextStyle | TextStyle? | null | TextStyle applied to the search hint text. |
+| leadingIconSize | double | 24.0 | Size of the leading icon. |
+| actionIconSize | double | 24.0 | Size of action icons. |
+| profileAvatar | Widget? | null | Custom widget (e.g., CircleAvatar) displayed as profile button. |
+| popupMenuItems | List<PopupMenuEntry>? | null | List of menu items for profile/action menu. |
+| onProfileMenuSelected | ValueChanged<dynamic>? | null | Callback when a profile menu item is selected. |
+| notificationCount | int | 0 | Number displayed in red badge for notifications. |
+| hintText | String | "Search..." | Placeholder text for the search field. |
+| keepSearchOpenAfterSubmit | bool | false | Whether to keep the search bar open after pressing submit. |
+| searchIcon | IconData | Icons.search | Icon displayed to open search mode. |
+| closeIcon | IconData | Icons.close | Icon displayed to close search mode. |
+
 "
 
 Additional information ℹ️
