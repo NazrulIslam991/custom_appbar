@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'type_definitions.dart';
+typedef OnSearch = void Function(String query);
+typedef OnChanged = void Function(String query);
+typedef OnLeadingPressed = void Function();
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;

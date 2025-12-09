@@ -1,9 +1,7 @@
 import 'package:custom_appbar/custom_appbar.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -12,98 +10,106 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Search AppBar Demo',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.indigo,
-        useMaterial3: true,
-      ),
-      home: const TabbedHomeScreen(),
+      title: 'Custom AppBar Demo',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      home: const HomeScreen(),
     );
   }
 }
 
-class TabbedHomeScreen extends StatefulWidget {
-  const TabbedHomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<TabbedHomeScreen> createState() => _TabbedHomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _TabbedHomeScreenState extends State<TabbedHomeScreen> {
-  List<String> allItems = List.generate(50, (i) => "Home Content ${i + 1}");
-  List<String> filteredItems = [];
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  // TabController for controlling TabBar
+  late TabController _tabController;
+
+  // Define the tabs
+  final List<Tab> myTabs = const [
+    Tab(text: "Home"),
+    Tab(text: "Profile"),
+    Tab(text: "Settings"),
+  ];
 
   @override
   void initState() {
     super.initState();
-    filteredItems = allItems;
+    _tabController = TabController(length: myTabs.length, vsync: this);
   }
 
-  /// ✅ LIVE filtering function: যখনই ইউজার সার্চবারে টাইপ করে
-  void onSearchChanged(String query) {
-    // সার্চ ক্যোয়ারি না থাকলে সব আইটেম দেখাও
-    if (query.isEmpty) {
-      setState(() {
-        filteredItems = allItems;
-      });
-      return;
-    }
-
-    // ক্যোয়ারির উপর ভিত্তি করে আইটেম ফিল্টার করা
-    setState(() {
-      filteredItems = allItems
-          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
-  /// Submit search (optional)
-  void onSearchSubmit(String query) {
-    // Submit এর সময়ও আপনি চাইলে onSearchChanged কল করতে পারেন।
-    // অথবা শুধু একটি মেসেজ দেখাতে পারেন।
-    debugPrint("Search submitted: $query");
-    // onSearchChanged(query); // যদি submit এ আলাদা করে ফিল্টার করার প্রয়োজন না হয়
+  // Function called when search is submitted
+  void _onSearchSubmitted(String query) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Search: $query')));
+  }
+
+  // Function called when search text changes
+  void _onSearchChanged(String query) {
+    // You can filter content here
+    print('Search changed: $query');
+  }
+
+  // Function called when profile button is pressed
+  void _onProfileSelected(dynamic value) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Profile button clicked')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // CustomAppBar with all features
       appBar: CustomAppBar(
-        title: "Search & Filter Demo",
-        // ✅ onSearchChanged ফাংশনটি onChanged প্রপার্টিতে পাস করা হলো
-        onChanged: onSearchChanged,
-        onSearch: onSearchSubmit,
-        hintText: "Search items...",
-        // সার্চ বন্ধ না করে কন্টিনিউ রাখার জন্য
-        keepSearchOpenAfterSubmit: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        titleStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        title: "Dashboard", // Title of AppBar
+        leadingIcon: Icons.menu, // Leading icon
+        backgroundColor: Colors.blue, // AppBar color
+        notificationCount: 7, // Notification badge count
+        profileAvatar: const CircleAvatar(
+          radius: 14,
+          backgroundColor: Colors.white,
+          child: Text('P', style: TextStyle(color: Colors.blue)),
+        ), // Profile avatar
+        onProfileMenuSelected: _onProfileSelected, // Profile click action
+        onSearch: _onSearchSubmitted, // Search submit callback
+        onChanged: _onSearchChanged, // Search text change callback
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: myTabs,
+          indicator: BoxDecoration(
+            color: Colors.white.withOpacity(0.3), // Tab indicator color
+            borderRadius: BorderRadius.circular(12), // Rounded indicator
+          ),
+          labelColor: Colors.white, // Selected tab text color
+          unselectedLabelColor: Colors.white70, // Unselected tab text color
+        ),
+        bottomShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16), // Curve radius at bottom
+          ),
+        ),
       ),
 
-      // ✅ filteredItems লিস্টটি এখানে ব্যবহার করা হয়েছে
-      body: ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: filteredItems.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              title: Text(
-                filteredItems[index],
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              subtitle: Text(
-                'Result ${index + 1} of ${filteredItems.length}',
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          );
-        },
+      // TabBarView for displaying content of each tab
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          Center(child: Text("Home Content")), // Home tab content
+          Center(child: Text("Profile Content")), // Profile tab content
+          Center(child: Text("Settings Content")), // Settings tab content
+        ],
       ),
     );
   }
