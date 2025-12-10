@@ -25,6 +25,18 @@ The `searchable_appbar` is a modern replacement for Flutter's default `AppBar`, 
 • Custom Layout: Full control of `toolbarHeight`, `bottom` widget, `bottomShape`, and `titleAlignment`.  
 
 
+---
+
+## Demo
+
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/32e55d62-2183-4bbf-a588-a2de1d7b00fb"
+       width="400"
+       height="400"
+       alt="Demo GIF">
+</p>
+
 
 
 ---
