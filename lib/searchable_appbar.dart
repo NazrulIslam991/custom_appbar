@@ -1,39 +1,99 @@
 import 'package:flutter/material.dart';
 
+/// Callback signature for when a search query is submitted.
 typedef OnSearch = void Function(String query);
+
+/// Callback signature for when the text in the search field changes.
 typedef OnChanged = void Function(String query);
+
+/// Callback signature for when the leading icon (e.g., menu or back button) is pressed.
 typedef OnLeadingPressed = void Function();
 
+/// A customizable AppBar that can easily switch between a title view and a search input field.
+///
+/// It implements [PreferredSizeWidget] for use directly in a [Scaffold].
 class SearchableAppbar extends StatefulWidget implements PreferredSizeWidget {
+  /// The title text to display when the search bar is inactive.
   final String title;
+
+  /// The icon displayed on the left side of the AppBar (e.g., menu or back).
   final IconData leadingIcon;
+
+  /// Callback function when the user submits the search query.
   final OnSearch? onSearch;
+
+  /// Callback function when the text in the search field changes.
   final OnChanged? onChanged;
+
+  /// Callback function when the leading icon is pressed.
   final OnLeadingPressed? onLeadingPressed;
+
+  /// The height of the toolbar. Defaults to [kToolbarHeight].
   final double toolbarHeight;
+
+  /// Alignment for the title widget when not searching.
   final Alignment titleAlignment;
+
+  /// The shape of the AppBar's material. Can be used to create rounded corners.
   final ShapeBorder? bottomShape;
+
+  /// Widget that appears across the bottom of the AppBar.
   final PreferredSizeWidget? bottom;
+
+  /// The background color of the AppBar.
   final Color? backgroundColor;
+
+  /// The color of the leading icon (menu/back).
   final Color? leadingIconColor;
+
+  /// The color of the action icons (search/notification/profile).
   final Color? actionIconColor;
+
+  /// The default color for the title text and search text.
   final Color? textColor;
+
+  /// The [TextStyle] for the main title text.
   final TextStyle? titleStyle;
+
+  /// The [TextStyle] for the text entered in the search field.
   final TextStyle? searchTextStyle;
+
+  /// The [TextStyle] for the hint text in the search field.
   final TextStyle? hintTextStyle;
+
+  /// The size of the leading icon.
   final double leadingIconSize;
+
+  /// The size of the action icons.
   final double actionIconSize;
+
+  /// A custom widget to use as the profile avatar (e.g., [CircleAvatar]).
   final Widget? profileAvatar;
+
+  /// List of items to display in a [PopupMenuButton] associated with the profile/actions.
   final List<PopupMenuEntry<dynamic>>? popupMenuItems;
+
+  /// Called when an item is selected from the profile/action menu.
   final ValueChanged<dynamic>? onProfileMenuSelected;
+
+  /// The number to display in the notification badge. If 0, no badge is shown.
   final int notificationCount;
+
+  /// The hint text shown in the search input field.
   final String hintText;
+
+  /// If true, the search bar remains open after the user submits the search query.
   final bool keepSearchOpenAfterSubmit;
+
+  /// The icon used to switch to the search state. Defaults to [Icons.search].
   final IconData searchIcon;
+
+  /// The icon used to close the search state. Defaults to [Icons.close].
   final IconData closeIcon;
 
+  /// Creates a SearchableAppbar.
   const SearchableAppbar({
-    Key? key,
+    super.key,
     this.title = "App Title",
     this.leadingIcon = Icons.menu,
     this.onSearch,
@@ -60,7 +120,7 @@ class SearchableAppbar extends StatefulWidget implements PreferredSizeWidget {
     this.keepSearchOpenAfterSubmit = false,
     this.searchIcon = Icons.search,
     this.closeIcon = Icons.close,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchableAppbar> createState() => _SearchableAppbarState();
@@ -75,6 +135,7 @@ class SearchableAppbar extends StatefulWidget implements PreferredSizeWidget {
   }
 }
 
+/// The state class for [SearchableAppbar], managing the search state and animations.
 class _SearchableAppbarState extends State<SearchableAppbar>
     with SingleTickerProviderStateMixin {
   bool _isSearching = false;
@@ -107,6 +168,7 @@ class _SearchableAppbarState extends State<SearchableAppbar>
       _isSearching = !_isSearching;
       if (_isSearching) {
         _anim.forward().then((_) {
+          // Request focus after the animation to ensure the keyboard pops up smoothly
           FocusScope.of(context).requestFocus(FocusNode());
         });
       } else {
@@ -137,8 +199,10 @@ class _SearchableAppbarState extends State<SearchableAppbar>
         widget.textColor ?? _getThemeAwareDefaultColor(context);
     final TextStyle defaultSearchTextStyle =
         TextStyle(color: defaultSearchTextColor);
+
+    // 0.7 * 255 = 178.5. Using 178 for alpha. This fixes the deprecated withOpacity issue.
     final TextStyle defaultHintStyle = defaultSearchTextStyle.copyWith(
-      color: defaultSearchTextColor.withOpacity(0.7),
+      color: defaultSearchTextColor.withAlpha(178),
     );
 
     return FadeTransition(
@@ -235,12 +299,16 @@ class _SearchableAppbarState extends State<SearchableAppbar>
     );
   }
 
+  /// Determines the default text/icon color based on the app's theme and AppBar background color.
   Color _getThemeAwareDefaultColor(BuildContext context) {
     final Brightness currentBrightness = Theme.of(context).brightness;
 
+    // If a custom background color is provided, we assume the icon/text should be white for contrast.
     if (widget.backgroundColor != null) {
+      // NOTE: Logic assumes a dark background if custom color is used, returning white for contrast.
       return Colors.white;
     } else {
+      // Fallback to theme-aware default (black for light theme, white for dark theme)
       return currentBrightness == Brightness.dark ? Colors.white : Colors.black;
     }
   }

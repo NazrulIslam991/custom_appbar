@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen>
   // Function called when search text changes
   void _onSearchChanged(String query) {
     // You can filter content here
-    print('Search changed: $query');
   }
 
   // Function called when profile button is pressed
