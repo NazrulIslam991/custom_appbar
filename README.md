@@ -81,17 +81,131 @@ SearchableAppbar(
 
 ### 3. AppBar with Search
 
+The search bar now automatically includes a microphone icon for voice input.
+
+Prerequisites for Voice Search (Android & iOS): 
+
+To enable the built-in voice search functionality, you must add the following permissions and declarations to your platform files:
+
+1. Android (android/app/src/main/AndroidManifest.xml)
+Add these lines inside the <manifest> tag, usually before the <application> tag:
+
+```dart
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
+<queries>
+  <intent>
+    <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+  </intent>
+</queries>
+
+```
+2. iOS (ios/Runner/Info.plist)
+
+Add the NSMicrophoneUsageDescription key to the main dictionary (<dict>):
+```dart
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs access to your microphone for voice search.</string>
+```
+
+Usage Example: 
 
 ```dart
 SearchableAppbar(
   title: "Search Example",
+  // Callback when text is submitted (e.g., hitting Enter or finishing voice input)
   onSearch: (query) => print("Search submitted: $query"),
-  onChanged: (query) => print("Search changed: $query"),
-  hintText: "Type something...",
-  keepSearchOpenAfterSubmit: true,
+  
+  // Callback for every keystroke or every word recognized during voice input
+  onChanged: (query) => print("Current search text: $query"),
+  
+  hintText: "Type or tap the mic for voice search...",
+  
+  // Set to true if you want the search bar to stay open after submission
+  keepSearchOpenAfterSubmit: true, 
 )
+```
 
+```dart
+SearchableAppbar(
+  title: "Search Example",
+  // Callback when text is submitted (e.g., hitting Enter or finishing voice input)
+  onSearch: (query) => print("Search submitted: $query"),
+  
+  // Callback for every keystroke or every word recognized during voice input
+  onChanged: (query) => print("Current search text: $query"),
+  
+  hintText: "Type or tap the mic for voice search...",
+  
+  // Set to true if you want the search bar to stay open after submission
+  keepSearchOpenAfterSubmit: true, 
+)
+```
+AppBar with Live Filtering and Tabs: 
 
+This example combines the use of bottom (for TabBar) and the search callbacks (onSearch/onChanged) to implement real-time list filtering within a Scaffold.
+
+```dart
+// Ensure your StatefulWidget mixins SingleTickerProviderStateMixin
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  // ... (TabController and other setup)
+  
+  // List data and filter logic (as shown in the provided code)
+  final List<String> _allItems = ["Apple", "Banana", "Carrot", ...];
+  List<String> _filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredItems = List.from(_allItems);
+    // ... (TabController initialization)
+  }
+
+  void _onSearchChanged(String query) {
+    setState(() {
+      final lowerCaseQuery = query.toLowerCase();
+      if (lowerCaseQuery.isEmpty) {
+        _filteredItems = List.from(_allItems);
+      } else {
+        _filteredItems = _allItems
+            .where((item) => item.toLowerCase().contains(lowerCaseQuery))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SearchableAppbar(
+        title: "Dashboard",
+        leadingIcon: Icons.menu,
+        notificationCount: 7,
+        onChanged: _onSearchChanged, // <-- Key for live filtering
+        bottom: TabBar(
+          // ... (TabBar setup)
+        ),
+        bottomShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+        ),
+      ),
+      body: TabBarView(
+        // ... (TabBarView for content)
+        children: [
+          // Display the filtered list
+          ListView.builder(
+            itemCount: _filteredItems.length,
+            itemBuilder: (context, index) {
+              return ListTile(title: Text(_filteredItems[index]));
+            },
+          ),
+          const Center(child: Text("Profile Content")),
+          const Center(child: Text("Settings Content")),
+        ],
+      ),
+    );
+  }
+}
 ```
 
 ### 4. AppBar with Notification Badge
