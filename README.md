@@ -2,7 +2,7 @@
 
 | Pub.dev | License | Platform |
 | :---: | :---: | :---: |
-| [![pub package](https://img.shields.io/pub/v/custom_appbar.svg)](https://pub.dev/packages/custom_appbar) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) | [![Platform](https://img.shields.io/badge/platform-flutter-blue.svg)](https://flutter.dev) |
+| [![pub package](https://img.shields.io/pub/v/custom_appbar.svg)](https://pub.dev/packages/searchable_appbar) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) | [![Platform](https://img.shields.io/badge/platform-flutter-blue.svg)](https://flutter.dev) |
 
 A highly customizable Flutter `AppBar` widget with **built-in, animated search functionality**, automatic theme awareness, notification badges, and avatar support. Simplify your application header implementation with rich features out of the box.
 
