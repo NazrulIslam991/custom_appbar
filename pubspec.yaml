@@ -1,5 +1,5 @@
 name: searchable_appbar
-version: 0.0.1
+version: 0.0.2
 description: A customizable Flutter AppBar widget with built-in search functionality.
 repository: https://github.com/NazrulIslam991/searchable_appbar
 license: MIT
